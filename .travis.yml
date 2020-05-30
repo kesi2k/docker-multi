@@ -1,0 +1,27 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t kesidocker00/docker-multi -f ./client/Dockerfile.dev ./client/
+
+script:
+  - docker run -e CI=true kesidocker00/docker-multi npm run test -- --coverage
+
+after_success:
+  - docker build -t kesidocker00/multi-client ./client
+  - docker build -t kesidocker00/multi-nginx ./nginx
+  - docker build -t kesidocker00/multi-server ./server
+  - docker build -t kesidocker00/multi-worker ./worker
+
+  #Log in to docker cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+
+  # Push images to docker hub
+  - docker push kesidocker00/multi-client
+  - docker push kesidocker00/multi-nginx
+  - docker push kesidocker00/multi-server
+  - docker push kesidocker00/multi-worker
+
