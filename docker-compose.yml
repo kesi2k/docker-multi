@@ -45,3 +45,10 @@ services:
     volumes:
       - /app/node_modules
       - ./worker:/app
+
+# awscache setup
+# Master username: postgres
+# Master password: postgres_password
+# username: postgres
+# password: postgres_password
+# dbName: postgres
